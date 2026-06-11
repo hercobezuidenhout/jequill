@@ -105,15 +105,16 @@ export class PropertiesView extends ItemView {
       const updates: Record<string, any> = {};
 
       const inputs = container.querySelectorAll('input[data-property-key]');
-      inputs.forEach((input: HTMLInputElement) => {
-        const key = input.getAttribute('data-property-key');
-        const type = input.getAttribute('data-property-type');
+      inputs.forEach((input: Element) => {
+        const htmlInput = input as HTMLInputElement;
+        const key = htmlInput.getAttribute('data-property-key');
+        const type = htmlInput.getAttribute('data-property-type');
 
         if (key) {
           if (type === 'array') {
-            updates[key] = input.value.split(',').map(v => v.trim()).filter(v => v);
+            updates[key] = htmlInput.value.split(',').map(v => v.trim()).filter(v => v);
           } else {
-            updates[key] = input.value;
+            updates[key] = htmlInput.value;
           }
         }
       });
@@ -122,7 +123,7 @@ export class PropertiesView extends ItemView {
       if (tagsPillsContainer) {
         const pills = tagsPillsContainer.querySelectorAll('.tag-pill .tag-text');
         const tags: string[] = [];
-        pills.forEach((pill: HTMLElement) => {
+        pills.forEach((pill: Element) => {
           tags.push(pill.textContent || '');
         });
         updates['tags'] = tags;
@@ -131,6 +132,7 @@ export class PropertiesView extends ItemView {
       const content = await this.app.vault.read(this.currentFile);
       const newContent = updateMultipleProperties(content, updates);
       await this.app.vault.modify(this.currentFile, newContent);
+      await this.gitService.commitAndPush(`save: ${this.currentFile.name}`);
       new Notice('Properties updated');
     } catch (error) {
       console.error('Failed to save properties:', error);
@@ -158,7 +160,7 @@ export class PropertiesView extends ItemView {
       }, 100);
     } catch (error) {
       console.error('Failed to publish post:', error);
-      new Notice(`Failed to publish post: ${error.message}`);
+      new Notice(`Failed to publish post: ${(error as any).message}`);
     }
   }
 
@@ -182,7 +184,7 @@ export class PropertiesView extends ItemView {
       }, 100);
     } catch (error) {
       console.error('Failed to unpublish post:', error);
-      new Notice(`Failed to unpublish post: ${error.message}`);
+      new Notice(`Failed to unpublish post: ${(error as any).message}`);
     }
   }
 
