@@ -4,3 +4,4 @@ dist/
 *.log
 .DS_Store
 *.pem
+my-awesome-site/.obsidian/plugins/jequill
