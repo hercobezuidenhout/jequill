@@ -57,6 +57,8 @@ export function createPostService(app: App) {
       file.path.startsWith('_drafts') || file.path.startsWith('_posts')
     );
 
+    console.log(markdownFiles, blogFiles);
+
     const posts: BlogPost[] = [];
 
     for (const file of blogFiles) {
