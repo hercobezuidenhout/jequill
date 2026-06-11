@@ -8,4 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+- Commit and push when user saves post [#1](https://github.com/hercobezuidenhout/jequill/issues/1).
 - Initial features

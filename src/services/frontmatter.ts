@@ -32,7 +32,7 @@ export const updateProperty = (content: string, key: string, value: any): string
 
   let frontmatter = frontmatterMatch[1];
   const lines = frontmatter.split('\n');
-  const newLines = [];
+  const newLines: string[] = [];
 
   for (const line of lines) {
     const match = line.match(/^([^:]+):\s*(.*)$/);
@@ -58,7 +58,7 @@ export const updateMultipleProperties = (content: string, updates: Record<string
 
   let frontmatter = frontmatterMatch[1];
   const lines = frontmatter.split('\n');
-  const newLines = [];
+  const newLines: string[] = [];
 
   for (const line of lines) {
     const match = line.match(/^([^:]+):\s*(.*)$/);

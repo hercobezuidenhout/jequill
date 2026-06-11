@@ -1,19 +1,27 @@
 {
   "compilerOptions": {
-    "types": ["node"],
-    "baseUrl": ".",
+    "moduleResolution": "node",
+    "types": [
+      "node"
+    ],
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
     "target": "ES6",
     "allowJs": true,
-    "noImplicitAny": true,
-    "moduleResolution": "node",
+    "noImplicitAny": false,
     "importHelpers": true,
     "isolatedModules": true,
     "strictNullChecks": true,
-    "lib": ["DOM", "ES5", "ES6", "ES7"],
+    "lib": [
+      "DOM",
+      "ES5",
+      "ES6",
+      "ES7"
+    ],
     "skipLibCheck": true
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ]
 }
