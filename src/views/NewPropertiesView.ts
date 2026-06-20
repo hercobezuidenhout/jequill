@@ -115,10 +115,10 @@ export class NewPropertiesView extends ItemView {
             const newContent = updateMultipleProperties(content, updates)
             await this.app.vault.modify(this.currentFile, newContent)
             await this.gitService.commitAndPush(`save: ${this.currentFile.name}`)
-            new Notice('Properties updated')
+            new Notice('Post updated')
         } catch (error) {
-            console.error('Failed to save properties:', error)
-            new Notice('Failed to save properties')
+            console.error('Failed to save post:', error)
+            new Notice('Failed to save post')
         }
     }
 }

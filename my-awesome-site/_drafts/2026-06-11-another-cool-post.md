@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Another cool post!
+title: wait what!!
 date: 2026-06-19
 categories:
 ---
