@@ -1,12 +1,13 @@
 import { ItemView, Notice, TFile, WorkspaceLeaf } from "obsidian"
-import BlogList from '../components/BlogList.svelte'
+import BlogList from '../components/Posts.svelte'
 import { mount, unmount } from "svelte"
 import { createPostService } from "../services/post"
 import type { BlogPost } from "../types"
+import Posts from "../components/Posts.svelte"
 
-export const VIEW_TYPE_NEW_BLOG = "jequill-new-blog-view"
+export const VIEW_TYPE_POSTS = "jequill-posts-view"
 
-export class NewBlogListView extends ItemView {
+export class PostsView extends ItemView {
     blogList: ReturnType<typeof BlogList> | undefined
     posts: BlogPost[] = [];
     private postService: ReturnType<typeof createPostService>
@@ -17,15 +18,14 @@ export class NewBlogListView extends ItemView {
     }
 
     getViewType(): string {
-        return VIEW_TYPE_NEW_BLOG
+        return VIEW_TYPE_POSTS
     }
     getDisplayText(): string {
         return 'Jequill'
     }
 
     protected async onOpen(): Promise<void> {
-        this.posts = await this.postService.loadPosts()
-        this.mountBlogList(this.posts)
+        await this.fetchAndMountBlogList()
     }
 
     protected async onClose(): Promise<void> {
@@ -44,7 +44,7 @@ export class NewBlogListView extends ItemView {
             unmount(this.blogList)
         }
 
-        this.blogList = mount(BlogList, {
+        this.blogList = mount(Posts, {
             target: this.contentEl,
             props: {
                 posts: posts,

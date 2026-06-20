@@ -34,7 +34,6 @@ export class JequillSettingTab extends PluginSettingTab {
                     .onChange(async (value) => {
                         this.plugin.settings.enableMinimalWorskpace = value
                         await this.plugin.saveSettings()
-                        this.plugin.onSettingsChanged()
                     })
             )
     }
