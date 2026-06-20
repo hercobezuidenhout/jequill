@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_posts/2026-06-20-another-cool-post.md",
+                "file": "_drafts/another-cool-post.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-06-20-another-cool-post"
+              "title": "another-cool-post"
             }
           }
         ]
@@ -203,10 +203,10 @@
       "bases:Create new base": false
     }
   },
-  "active": "e9312a2f5003f64b",
+  "active": "eef625eb138f8c5c",
   "lastOpenFiles": [
     "_posts/2026-06-11-welcome-to-jekyll.md",
-    "_posts/2026-06-20-another-cool-post.md",
+    "_drafts/another-cool-post.md",
     "_drafts/new-post-216503.md",
     "_drafts/new-post-2040244.md",
     "_drafts/new-post-1948996.md",
