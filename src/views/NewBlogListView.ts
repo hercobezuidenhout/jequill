@@ -74,8 +74,6 @@ export class NewBlogListView extends ItemView {
             const leaf = this.app.workspace.getLeaf(false)
             await leaf.openFile(file)
 
-            this.posts = await this.postService.loadPosts()
-            await this.mountBlogList(this.posts)
             new Notice(`Created draft: ${title}`)
         } catch (error) {
             console.error('Create post error:', error)
