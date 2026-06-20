@@ -42,6 +42,9 @@
     </div>
 
     <hr />
+    {#if loading}
+        Busy doing the thing...
+    {/if}
     <div class="button-group">
         <div>
             <button onclick={() => handleClick(onDelete)} class="danger"
