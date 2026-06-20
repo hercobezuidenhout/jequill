@@ -69,7 +69,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json manifest.json versions.json CHANGELOG.md
+          git add package.json package-lock.json manifest.json versions.json CHANGELOG.md
           git commit -m "release: Release v$STABLE_VERSION"
           git push origin main
 
