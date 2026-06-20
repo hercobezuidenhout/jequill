@@ -12,23 +12,27 @@
     <button onclick={onNewPostClick} class="mod-cta">New post</button>
 </div>
 
-<div>
-    <SectionHeader heading="Drafts" count={drafts.length} />
-    <div class="post-list">
-        {#each drafts as post}
-            <Post {post} onClick={() => onPostClick(post.file)} />
-        {/each}
+{#if drafts.length}
+    <div>
+        <SectionHeader heading="Drafts" count={drafts.length} />
+        <div class="post-list">
+            {#each drafts as post}
+                <Post {post} onClick={() => onPostClick(post.file)} />
+            {/each}
+        </div>
     </div>
-</div>
+{/if}
 
-<div>
-    <SectionHeader heading="Published" count={published.length} />
-    <div class="post-list">
-        {#each published as post}
-            <Post {post} onClick={() => onPostClick(post.file)} />
-        {/each}
+{#if published.length}
+    <div>
+        <SectionHeader heading="Published" count={published.length} />
+        <div class="post-list">
+            {#each published as post}
+                <Post {post} onClick={() => onPostClick(post.file)} />
+            {/each}
+        </div>
     </div>
-</div>
+{/if}
 
 <style>
     .jequill-header {

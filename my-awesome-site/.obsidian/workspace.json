@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_drafts/2026-06-11-another-cool-post.md",
+                "file": "_posts/2026-06-11-another-cool-post.md",
                 "mode": "source",
                 "source": false
               },
@@ -206,7 +206,7 @@
   "active": "eef625eb138f8c5c",
   "lastOpenFiles": [
     "_drafts/new-post-2040244.md",
-    "_drafts/2026-06-11-another-cool-post.md",
+    "_posts/2026-06-11-another-cool-post.md",
     "_posts/2026-06-11-welcome-to-jekyll.md",
     "_drafts/new-post-1948996.md",
     "_drafts/new-post-1918113.md",
