@@ -8,7 +8,6 @@
 
     const handleClick = async (callback, ...args) => {
         loading = true;
-
         await callback(...args);
     };
 </script>
@@ -42,9 +41,6 @@
     </div>
 
     <hr />
-    {#if loading}
-        Busy doing the thing...
-    {/if}
     <div class="button-group">
         <div>
             <button onclick={() => handleClick(onDelete)} class="danger"
@@ -67,6 +63,9 @@
             {/if}
         </div>
     </div>
+    {#if loading}
+        Busy doing the thing...
+    {/if}
 </div>
 
 <style>
