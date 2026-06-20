@@ -19,9 +19,11 @@
       "ES6",
       "ES7"
     ],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true
   },
   "include": [
-    "src/**/*.ts"
+    "**/*.ts",
+    "**/*.svelte"
   ]
 }
