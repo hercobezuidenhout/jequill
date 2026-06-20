@@ -12,12 +12,11 @@ A beautiful, writer-focused Obsidian plugin to manage your Jekyll blog. Write in
 - Reading time estimates
 - Elegant date formatting
 
-### Right Panel - Admin
+### Right Panel - Post Details
 - Status display (Draft/Published with date)
 - Interactive property editing:
-  - 📅 Date picker
-  - 🏷️ Tag pills with autocomplete
-  - 📁 Category suggestions
+  - Change title
+  - Change date
 - Quick actions: Publish, Save, Delete
 
 ### Minimal Workspace
@@ -54,18 +53,6 @@ BRAT will automatically update to new beta releases.
 4. Move both files to the folder
 5. Reload Obsidian (Ctrl/Cmd + R)
 6. Enable the plugin in Settings → Community Plugins
-
-## Workflow
-
-1. **Create**: Click "New Post" → Enter title → Start writing
-2. **Write**: Focus on content (frontmatter hidden automatically)
-3. **Edit Properties**: Use right panel for metadata
-4. **Publish**: Click "→ Publish" in properties panel
-   - Moves from `_drafts/` to `_posts/`
-   - Adds date prefix if missing
-   - Commits and pushes to git
-5. **Unpublish**: Click "→ Unpublish" to move back to drafts
-6. **Delete**: Click delete link for permanent removal
 
 ## Requirements
 

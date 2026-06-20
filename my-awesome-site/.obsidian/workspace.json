@@ -11,14 +11,10 @@
             "id": "e9312a2f5003f64b",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_drafts/another-cool-post.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "another-cool-post"
+              "title": "New tab"
             }
           }
         ]
@@ -205,8 +201,9 @@
   },
   "active": "f5ddf7e749ff928a",
   "lastOpenFiles": [
-    "reload.md",
     "_drafts/another-cool-post.md",
+    "_drafts/2026-06-11-another-cool-post.md",
+    "reload.md",
     "_posts/2026-06-11-welcome-to-jekyll.md",
     "_drafts/new-post-216503.md",
     "_drafts/new-post-2040244.md",
