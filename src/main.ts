@@ -5,6 +5,7 @@ import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace'
 import { VIEW_TYPE_BLOG, VIEW_TYPE_PROPERTIES } from './types'
 import { ExampleView, VIEW_TYPE_EXAMPLE } from './views/ExampleView'
 import { JequillSettingTab } from './settings'
+import { NewBlogListView, VIEW_TYPE_NEW_BLOG } from './views/NewBlogListView'
 
 interface JequillPluginSettings {
   enableMinimalWorskpace: boolean
@@ -43,6 +44,11 @@ export default class JequillPlugin extends Plugin {
     })
 
     this.registerView(
+      VIEW_TYPE_NEW_BLOG,
+      (leaf) => new NewBlogListView(leaf)
+    )
+
+    this.registerView(
       VIEW_TYPE_BLOG,
       (leaf) => new BlogListView(leaf, this)
     )
@@ -54,6 +60,10 @@ export default class JequillPlugin extends Plugin {
 
     this.addRibbonIcon('newspaper', 'Jekyll Blog Manager', () => {
       this.activateView()
+    })
+
+    this.addRibbonIcon('newspaper', 'Jequill', () => {
+      this.activateBlogListView()
     })
 
     this.addCommand({
@@ -115,6 +125,28 @@ export default class JequillPlugin extends Plugin {
     this.app.workspace.detachLeavesOfType(VIEW_TYPE_BLOG)
     this.app.workspace.detachLeavesOfType(VIEW_TYPE_PROPERTIES)
     cleanupWorkspace()
+  }
+
+  async activateBlogListView() {
+    const { workspace } = this.app
+
+    let leaf: WorkspaceLeaf | null = null
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_NEW_BLOG)
+
+    if (leaves.length > 0) {
+      // A leaf with our view already exists, use that
+      leaf = leaves[0]
+    } else {
+      // Our view could not be found in the workspace, create a new leaf
+      // in the right sidebar for it
+      leaf = workspace.getLeftLeaf(false)
+      await leaf?.setViewState({ type: VIEW_TYPE_NEW_BLOG, active: true })
+    }
+
+    // "Reveal" the leaf in case it is in a collapsed sidebar
+    if (leaf) {
+      workspace.revealLeaf(leaf)
+    }
   }
 
   async activateView() {
