@@ -11,3 +11,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Commit and push when user saves post [#1](https://github.com/hercobezuidenhout/jequill/issues/1).
 - Initial features
+- Toggle minimal workspace
+- Svelte components for the UI [#3](https://github.com/hercobezuidenhout/jequill/issues/3.)
