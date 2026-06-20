@@ -1,13 +1,41 @@
-import { Notice, Plugin, WorkspaceLeaf } from 'obsidian'
+import { Plugin, WorkspaceLeaf } from 'obsidian'
 import { BlogListView } from './views/BlogListView'
 import { PropertiesView } from './views/PropertiesView'
-import { JekyllBlogSettingTab } from './settings/SettingTab'
 import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace'
 import { VIEW_TYPE_BLOG, VIEW_TYPE_PROPERTIES } from './types'
 import { ExampleView, VIEW_TYPE_EXAMPLE } from './views/ExampleView'
+import { JequillSettingTab } from './settings'
+
+interface JequillPluginSettings {
+  enableMinimalWorskpace: boolean
+}
+
+const DEFAULT_SETTINGS: Partial<JequillPluginSettings> = {
+  enableMinimalWorskpace: false,
+}
 
 export default class JequillPlugin extends Plugin {
+  settings: JequillPluginSettings | undefined
+
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings)
+  }
+
+  async onSettingsChanged() {
+    this.loadLayout()
+  }
+
+
+
   async onload() {
+    await this.loadSettings()
+
+    this.addSettingTab(new JequillSettingTab(this.app, this))
+
     this.registerView(VIEW_TYPE_EXAMPLE, (leaf) => new ExampleView(leaf))
 
     this.addRibbonIcon('dice', 'Activate view', () => {
@@ -36,13 +64,7 @@ export default class JequillPlugin extends Plugin {
       }
     })
 
-    this.addSettingTab(new JekyllBlogSettingTab(this.app, this))
-
-    this.app.workspace.onLayoutReady(() => {
-      // configureMinimalWorkspace()
-      this.activateView()
-      this.activatePropertiesView()
-    })
+    this.app.workspace.onLayoutReady(this.loadLayout)
 
     this.registerEvent(
       this.app.vault.on('create', () => {
@@ -64,6 +86,16 @@ export default class JequillPlugin extends Plugin {
         this.refreshViews()
       })
     )
+  }
+
+  async loadLayout() {
+    if (this.settings?.enableMinimalWorskpace) {
+      configureMinimalWorkspace()
+    } else {
+      cleanupWorkspace()
+    }
+    this.activateView()
+    this.activatePropertiesView()
   }
 
   async refreshViews() {
@@ -118,11 +150,13 @@ export default class JequillPlugin extends Plugin {
       // Our view could not be found in the workspace, create a new leaf
       // in the right sidebar for it
       leaf = workspace.getLeftLeaf(false)
-      await leaf.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true })
+      await leaf?.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true })
     }
 
     // "Reveal" the leaf in case it is in a collapsed sidebar
-    workspace.revealLeaf(leaf)
+    if (leaf) {
+      workspace.revealLeaf(leaf)
+    }
   }
 
   async activatePropertiesView() {
