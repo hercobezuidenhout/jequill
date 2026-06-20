@@ -73,15 +73,15 @@ export class NewPropertiesView extends ItemView {
                 title: frontmatter.title,
                 date: frontmatter.date?.split(' ')[0],
                 isDraft: activeFile.path.startsWith('_drafts/'),
-                onDelete: () => this.deletePost(),
-                onSave: (newTitle, newDate) => this.savePost(newTitle, newDate),
-                onPublish: () => this.publishPost(),
-                onUnpublish: () => this.unpublishPost()
+                onDelete: (onNotify) => this.deletePost(onNotify),
+                onSave: (newTitle, newDate, onNotify) => this.savePost(newTitle, newDate, onNotify),
+                onPublish: (onNotify) => this.publishPost(onNotify),
+                onUnpublish: (onNotify) => this.unpublishPost(onNotify)
             }
         })
     }
 
-    async deletePost() {
+    async deletePost(onNotify) {
         if (!this.currentFile) return
 
         const confirmation = confirm(`Are you sure you want to delete "${this.currentFile.name}"?`)
@@ -98,10 +98,12 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to delete post:', error)
             new Notice('Failed to delete post')
+        } finally {
+            onNotify()
         }
     }
 
-    async savePost(newTitle, newDate) {
+    async savePost(newTitle, newDate, onNotify) {
         if (!this.currentFile) return
 
         console.log(newDate)
@@ -119,10 +121,12 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to save post:', error)
             new Notice('Failed to save post')
+        } finally {
+            onNotify()
         }
     }
 
-    async publishPost() {
+    async publishPost(onNotify) {
         if (!this.currentFile) return
 
         try {
@@ -138,10 +142,12 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to publish post:', error)
             new Notice(`Failed to publish post: ${(error as any).message}`)
+        } finally {
+            onNotify()
         }
     }
 
-    async unpublishPost() {
+    async unpublishPost(onNotify) {
         if (!this.currentFile) return
 
         try {
@@ -157,6 +163,8 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to unpublish post:', error)
             new Notice(`Failed to unpublish post: ${(error as any).message}`)
+        } finally {
+            onNotify()
         }
     }
 }

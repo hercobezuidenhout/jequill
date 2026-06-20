@@ -4,8 +4,13 @@
 
     let statefulTitle = $state(title);
     let statefulDate = $state(date);
+    let loading = $state(false);
 
-    console.log(statefulTitle);
+    const handleClick = async (callback, ...args) => {
+        loading = true;
+
+        await callback(...args);
+    };
 </script>
 
 <div class="properties-view">
@@ -39,16 +44,23 @@
     <hr />
     <div class="button-group">
         <div>
-            <button onclick={onDelete} class="danger">Delete</button>
+            <button onclick={() => handleClick(onDelete)} class="danger"
+                >Delete</button
+            >
         </div>
         <div>
-            <button onclick={() => onSave(statefulTitle, statefulDate)}
+            <button
+                onclick={() => handleClick(onSave, statefulTitle, statefulDate)}
                 >Save</button
             >
             {#if isDraft}
-                <button onclick={onPublish} class="mod-cta">Publish</button>
+                <button onclick={() => handleClick(onPublish)} class="mod-cta"
+                    >Publish</button
+                >
             {:else}
-                <button onclick={onUnpublish} class="mod-cta">Unpublish</button>
+                <button onclick={() => handleClick(onUnpublish)} class="mod-cta"
+                    >Unpublish</button
+                >
             {/if}
         </div>
     </div>
