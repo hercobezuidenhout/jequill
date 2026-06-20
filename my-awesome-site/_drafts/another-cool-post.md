@@ -1,6 +1,6 @@
 ---
 layout: post
-title: wait what!!
+title: wait what!
 date: 2026-06-19
 categories:
 ---
