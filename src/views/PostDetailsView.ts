@@ -53,7 +53,6 @@ export class PostDetailsView extends ItemView {
 
     async renderView() {
         const activeFile = this.app.workspace.getActiveFile()
-        console.log('activeFile', activeFile)
         if (!activeFile || (!activeFile.path.startsWith('_posts/') && !activeFile.path.startsWith('_drafts/'))) {
             return
         }
@@ -105,8 +104,6 @@ export class PostDetailsView extends ItemView {
 
     async savePost(newTitle, newDate, onNotify) {
         if (!this.currentFile) return
-
-        console.log(newDate)
 
         try {
             const updates: Record<string, any> = {}

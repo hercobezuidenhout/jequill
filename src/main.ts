@@ -1,15 +1,15 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian'
-import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace'
+import { configureMinimalWorkspace, cleanupWorkspace, registerMinimalWorkspaceStyles } from './ui/workspace'
 import { JequillSettingTab } from './settings'
 import { PostsView, VIEW_TYPE_POSTS } from './views/PostsView'
 import { PostDetailsView, VIEW_TYPE_POST_DETAILS } from './views/PostDetailsView'
 
 interface JequillPluginSettings {
-  enableMinimalWorskpace: boolean
+  enableMinimalWorkspace: boolean
 }
 
 const DEFAULT_SETTINGS: Partial<JequillPluginSettings> = {
-  enableMinimalWorskpace: false,
+  enableMinimalWorkspace: false,
 }
 
 export default class JequillPlugin extends Plugin {
@@ -21,9 +21,11 @@ export default class JequillPlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings)
+    this.app.workspace.trigger('jequill:settings-changed')
   }
 
   async onload() {
+
     await this.loadSettings()
 
     this.addSettingTab(new JequillSettingTab(this.app, this))
@@ -42,8 +44,6 @@ export default class JequillPlugin extends Plugin {
       this.activatePostsView()
       this.activatePropertiesView()
     })
-
-    this.app.workspace.onLayoutReady(this.loadLayout)
 
     this.registerEvent(
       this.app.vault.on('create', () => {
@@ -65,21 +65,46 @@ export default class JequillPlugin extends Plugin {
         this.refreshViews()
       })
     )
+
+    this.registerEvent(
+      this.app.workspace.on('jequill:settings-changed' as any, () => {
+        this.renderLayout()
+      })
+    )
+
+    this.addCommand({
+      id: 'toggle-minimal-workspace',
+      name: 'Toggle Minimal Workspace',
+      checkCallback: (checking: boolean) => {
+        if (checking) return !!this.settings
+
+        this.settings.enableMinimalWorkspace = !this.settings.enableMinimalWorkspace
+        this.saveSettings()
+
+        return true
+      },
+      hotkeys: [
+        {
+          modifiers: ['Mod', 'Shift'],
+          key: 'M',
+        },
+      ],
+    })
+
+    registerMinimalWorkspaceStyles()
+
+    this.renderLayout()
   }
 
   onunload() {
     cleanupWorkspace()
   }
 
-  async loadLayout() {
-    if (this && this.settings) {
-      if (this.settings?.enableMinimalWorskpace) {
-        configureMinimalWorkspace()
-      } else {
-        cleanupWorkspace()
-      }
-      this.activatePostsView()
-      this.activatePropertiesView()
+  renderLayout() {
+    if (this.settings?.enableMinimalWorkspace) {
+      configureMinimalWorkspace()
+    } else {
+      cleanupWorkspace()
     }
   }
 

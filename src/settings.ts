@@ -30,9 +30,9 @@ export class JequillSettingTab extends PluginSettingTab {
             .setName('Enable minimal workspace')
             .addToggle((toggle) =>
                 toggle
-                    .setValue(this.plugin.settings.enableMinimalWorskpace)
+                    .setValue(this.plugin.settings.enableMinimalWorkspace)
                     .onChange(async (value) => {
-                        this.plugin.settings.enableMinimalWorskpace = value
+                        this.plugin.settings.enableMinimalWorkspace = value
                         await this.plugin.saveSettings()
                     })
             )
