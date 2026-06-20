@@ -33,7 +33,7 @@
     </div>
     <div class="form-control">
         <label for="date">Date</label>
-        <input name="date" type="date" value={statefulDate} />
+        <input name="date" type="date" bind:value={statefulDate} />
     </div>
     ==
     <hr />
