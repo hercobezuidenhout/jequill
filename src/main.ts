@@ -1,120 +1,162 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian';
-import { BlogListView } from './views/BlogListView';
-import { PropertiesView } from './views/PropertiesView';
-import { JekyllBlogSettingTab } from './settings/SettingTab';
-import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace';
-import { VIEW_TYPE_BLOG, VIEW_TYPE_PROPERTIES } from './types';
+import { Plugin, WorkspaceLeaf } from 'obsidian'
+import { configureMinimalWorkspace, cleanupWorkspace, registerMinimalWorkspaceStyles } from './ui/workspace'
+import { JequillSettingTab } from './settings'
+import { PostsView, VIEW_TYPE_POSTS } from './views/PostsView'
+import { PostDetailsView, VIEW_TYPE_POST_DETAILS } from './views/PostDetailsView'
 
-export default class JekyllBlogManagerPlugin extends Plugin {
+interface JequillPluginSettings {
+  enableMinimalWorkspace: boolean
+}
+
+const DEFAULT_SETTINGS: Partial<JequillPluginSettings> = {
+  enableMinimalWorkspace: false,
+}
+
+export default class JequillPlugin extends Plugin {
+  settings!: JequillPluginSettings
+
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData())
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings)
+    this.app.workspace.trigger('jequill:settings-changed')
+  }
+
   async onload() {
-    this.registerView(
-      VIEW_TYPE_BLOG,
-      (leaf) => new BlogListView(leaf, this)
-    );
+
+    await this.loadSettings()
+
+    this.addSettingTab(new JequillSettingTab(this.app, this))
 
     this.registerView(
-      VIEW_TYPE_PROPERTIES,
-      (leaf) => new PropertiesView(leaf, this)
-    );
+      VIEW_TYPE_POSTS,
+      (leaf) => new PostsView(leaf)
+    )
 
-    this.addRibbonIcon('newspaper', 'Jekyll Blog Manager', () => {
-      this.activateView();
-    });
+    this.registerView(
+      VIEW_TYPE_POST_DETAILS,
+      (leaf) => new PostDetailsView(leaf)
+    )
 
-    this.addCommand({
-      id: 'open-jekyll-blog-view',
-      name: 'Open Blog Manager',
-      callback: () => {
-        this.activateView();
-      }
-    });
-
-    this.addSettingTab(new JekyllBlogSettingTab(this.app, this));
-
-    this.app.workspace.onLayoutReady(() => {
-      configureMinimalWorkspace();
-      this.activateView();
-      this.activatePropertiesView();
-    });
+    this.addRibbonIcon('newspaper', 'Jequill', () => {
+      this.activatePostsView()
+      this.activatePropertiesView()
+    })
 
     this.registerEvent(
       this.app.vault.on('create', () => {
-        this.refreshViews();
+        this.refreshViews()
       })
-    );
+    )
     this.registerEvent(
       this.app.vault.on('modify', () => {
-        this.refreshViews();
+        this.refreshViews()
       })
-    );
+    )
     this.registerEvent(
       this.app.vault.on('rename', () => {
-        this.refreshViews();
+        this.refreshViews()
       })
-    );
+    )
     this.registerEvent(
       this.app.vault.on('delete', () => {
-        this.refreshViews();
+        this.refreshViews()
       })
-    );
-  }
+    )
 
-  async refreshViews() {
-    const blogLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_BLOG);
-    for (const leaf of blogLeaves) {
-      const view = leaf.view as BlogListView;
-      await view.refresh();
-    }
-    const propertyLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_PROPERTIES);
-    for (const leaf of propertyLeaves) {
-      const view = leaf.view as PropertiesView;
-      await view.updateProperties();
-    }
+    this.registerEvent(
+      this.app.workspace.on('jequill:settings-changed' as any, () => {
+        this.renderLayout()
+      })
+    )
+
+    this.addCommand({
+      id: 'toggle-minimal-workspace',
+      name: 'Toggle Minimal Workspace',
+      checkCallback: (checking: boolean) => {
+        if (checking) return !!this.settings
+
+        this.settings.enableMinimalWorkspace = !this.settings.enableMinimalWorkspace
+        this.saveSettings()
+
+        return true
+      },
+      hotkeys: [
+        {
+          modifiers: ['Mod', 'Shift'],
+          key: 'M',
+        },
+      ],
+    })
+
+    registerMinimalWorkspaceStyles()
+
+    this.renderLayout()
   }
 
   onunload() {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_BLOG);
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_PROPERTIES);
-    cleanupWorkspace();
+    cleanupWorkspace()
   }
 
-  async activateView() {
-    const { workspace } = this.app;
+  renderLayout() {
+    if (this.settings?.enableMinimalWorkspace) {
+      configureMinimalWorkspace()
+    } else {
+      cleanupWorkspace()
+    }
+  }
 
-    let leaf: WorkspaceLeaf | null = null;
-    const leaves = workspace.getLeavesOfType(VIEW_TYPE_BLOG);
+  async refreshViews() {
+    const postsLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_POSTS)
+    for (const leaf of postsLeaves) {
+      const view = leaf.view as PostsView
+      await view.fetchAndMountBlogList()
+    }
+  }
+
+  async activatePostsView() {
+    const { workspace } = this.app
+
+    let leaf: WorkspaceLeaf | null = null
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_POSTS)
 
     if (leaves.length > 0) {
-      leaf = leaves[0];
+      // A leaf with our view already exists, use that
+      leaf = leaves[0]
     } else {
-      leaf = workspace.getLeftLeaf(false);
-      if (leaf) {
-        await leaf.setViewState({ type: VIEW_TYPE_BLOG, active: true });
-      }
+      // Our view could not be found in the workspace, create a new leaf
+      // in the right sidebar for it
+      leaf = workspace.getLeftLeaf(false)
+      await leaf?.setViewState({ type: VIEW_TYPE_POSTS, active: true })
     }
 
+    // "Reveal" the leaf in case it is in a collapsed sidebar
     if (leaf) {
-      workspace.revealLeaf(leaf);
+      workspace.revealLeaf(leaf)
     }
   }
 
   async activatePropertiesView() {
-    const { workspace } = this.app;
+    const { workspace } = this.app
 
-    let leaf: WorkspaceLeaf | null = null;
-    const leaves = workspace.getLeavesOfType(VIEW_TYPE_PROPERTIES);
+    let leaf: WorkspaceLeaf | null = null
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_POST_DETAILS)
 
     if (leaves.length > 0) {
-      leaf = leaves[0];
+      // A leaf with our view already exists, use that
+      leaf = leaves[0]
     } else {
-      leaf = workspace.getRightLeaf(false);
-      if (leaf) {
-        await leaf.setViewState({ type: VIEW_TYPE_PROPERTIES, active: true });
-      }
+      // Our view could not be found in the workspace, create a new leaf
+      // in the right sidebar for it
+      leaf = workspace.getRightLeaf(false)
+      await leaf?.setViewState({ type: VIEW_TYPE_POST_DETAILS, active: true })
     }
 
+    // "Reveal" the leaf in case it is in a collapsed sidebar
     if (leaf) {
-      workspace.revealLeaf(leaf);
+      workspace.revealLeaf(leaf)
     }
   }
 }
