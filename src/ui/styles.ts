@@ -1,9 +1,9 @@
 export const injectBlogListStyles = (): void => {
-  const styleEl = document.getElementById('jekyll-blog-styles');
-  if (styleEl) return;
+  const styleEl = document.getElementById('jekyll-blog-styles')
+  if (styleEl) return
 
-  const style = document.createElement('style');
-  style.id = 'jekyll-blog-styles';
+  const style = document.createElement('style')
+  style.id = 'jekyll-blog-styles'
   style.textContent = `
     .jekyll-blog-view {
       padding: 16px;
@@ -78,16 +78,16 @@ export const injectBlogListStyles = (): void => {
       padding: 48px 20px;
       font-size: 0.95em;
     }
-  `;
-  document.head.appendChild(style);
-};
+  `
+  document.head.appendChild(style)
+}
 
 export const injectPropertiesStyles = (): void => {
-  const styleEl = document.getElementById('jekyll-properties-styles');
-  if (styleEl) return;
+  const styleEl = document.getElementById('jekyll-properties-styles')
+  if (styleEl) return
 
-  const style = document.createElement('style');
-  style.id = 'jekyll-properties-styles';
+  const style = document.createElement('style')
+  style.id = 'jekyll-properties-styles'
   style.textContent = `
     .jekyll-properties-view {
       padding: 16px;
@@ -249,13 +249,13 @@ export const injectPropertiesStyles = (): void => {
       padding: 48px 20px;
       font-size: 0.95em;
     }
-  `;
-  document.head.appendChild(style);
-};
+  `
+  document.head.appendChild(style)
+}
 
 export const removeStyles = (id: string): void => {
-  const style = document.getElementById(id);
+  const style = document.getElementById(id)
   if (style) {
-    style.remove();
+    style.remove()
   }
-};
+}

@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_drafts/2026-06-11-another-cool-post.md",
+                "file": "_drafts/new-post.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "2026-06-11-another-cool-post"
+              "title": "new-post"
             }
           }
         ]
@@ -85,16 +85,6 @@
             }
           },
           {
-            "id": "95f61a56ed458fb3",
-            "type": "leaf",
-            "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
-            }
-          },
-          {
             "id": "5f1d264d0d06b76d",
             "type": "leaf",
             "state": {
@@ -105,7 +95,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -213,8 +203,8 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "jequill:Jequill": false,
       "jequill:Activate view": false,
+      "jequill:Jequill": false,
       "jequill:Jekyll Blog Manager": false,
       "switcher:Open quick switcher": false,
       "graph:Open graph view": false,
@@ -225,10 +215,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "5f1d264d0d06b76d",
+  "active": "e9312a2f5003f64b",
   "lastOpenFiles": [
-    "_drafts/2026-06-11-another-cool-post.md",
+    "_drafts/something nice.md",
+    "_drafts/new-post.md",
     "_posts/2026-06-11-welcome-to-jekyll.md",
+    "_drafts/2026-06-11-another-cool-post.md",
+    "reload.md",
     "_drafts/2026-06-11-welcome-to-jekyll.md",
     "_drafts"
   ]
