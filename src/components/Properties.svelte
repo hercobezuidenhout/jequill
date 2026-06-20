@@ -1,6 +1,11 @@
 <script>
     let { title, date, isDraft, onDelete, onSave, onPublish, onUnpublish } =
         $props();
+
+    let statefulTitle = $state(title);
+    let statefulDate = $state(date);
+
+    console.log(statefulTitle);
 </script>
 
 <div class="properties-view">
@@ -24,11 +29,11 @@
     <h4>Properties</h4>
     <div class="form-control">
         <label for="title">Title</label>
-        <input name="title" value={title} />
+        <input name="title" bind:value={statefulTitle} />
     </div>
     <div class="form-control">
         <label for="date">Date</label>
-        <input name="date" type="date" value={date} />
+        <input name="date" type="date" value={statefulDate} />
     </div>
     ==
     <hr />
@@ -37,7 +42,9 @@
             <button onclick={onDelete} class="danger">Delete</button>
         </div>
         <div>
-            <button onclick={onSave}>Save</button>
+            <button onclick={() => onSave(statefulTitle, statefulDate)}
+                >Save</button
+            >
             {#if isDraft}
                 <button onclick={onPublish} class="mod-cta">Publish</button>
             {:else}

@@ -1,7 +1,7 @@
 import { ItemView, Notice, TFile, WorkspaceLeaf } from "obsidian"
 import Properties from "../components/Properties.svelte"
 import { mount, unmount } from "svelte"
-import { parseFrontmatter } from "../services/frontmatter"
+import { parseFrontmatter, updateMultipleProperties } from "../services/frontmatter"
 import { createPostService } from "../services/post"
 import { createGitService } from "../services/git"
 
@@ -74,7 +74,7 @@ export class NewPropertiesView extends ItemView {
                 date: frontmatter.date?.split(' ')[0],
                 isDraft: activeFile.path.startsWith('_drafts/'),
                 onDelete: () => this.deletePost(),
-                onSave: undefined,
+                onSave: (newTitle, newDate) => this.savePost(newTitle, newDate),
                 onPublish: undefined,
                 onUnpublish: undefined
             }
@@ -98,6 +98,25 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to delete post:', error)
             new Notice('Failed to delete post')
+        }
+    }
+
+    async savePost(newTitle, newDate) {
+        if (!this.currentFile) return
+
+        try {
+            const updates: Record<string, any> = {}
+            updates['title'] = newTitle
+            updates['date'] = newDate
+
+            const content = await this.app.vault.read(this.currentFile)
+            const newContent = updateMultipleProperties(content, updates)
+            await this.app.vault.modify(this.currentFile, newContent)
+            await this.gitService.commitAndPush(`save: ${this.currentFile.name}`)
+            new Notice('Properties updated')
+        } catch (error) {
+            console.error('Failed to save properties:', error)
+            new Notice('Failed to save properties')
         }
     }
 }
