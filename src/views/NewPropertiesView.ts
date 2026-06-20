@@ -104,6 +104,8 @@ export class NewPropertiesView extends ItemView {
     async savePost(newTitle, newDate) {
         if (!this.currentFile) return
 
+        console.log(newDate)
+
         try {
             const updates: Record<string, any> = {}
             updates['title'] = newTitle
