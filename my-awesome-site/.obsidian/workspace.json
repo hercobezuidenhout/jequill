@@ -165,23 +165,23 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_drafts/2026-06-11-another-cool-post.md",
+                "file": "_drafts/another-cool-post.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of 2026-06-11-another-cool-post"
+              "title": "Outline of another-cool-post"
             }
           },
           {
-            "id": "eef625eb138f8c5c",
+            "id": "f5ddf7e749ff928a",
             "type": "leaf",
             "state": {
-              "type": "jequill-new-properties-view",
+              "type": "jequill-post-details-view",
               "state": {},
               "icon": "settings",
-              "title": "New properties view"
+              "title": "Post Details"
             }
           }
         ],
@@ -203,7 +203,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "eef625eb138f8c5c",
+  "active": "e9312a2f5003f64b",
   "lastOpenFiles": [
     "_posts/2026-06-11-welcome-to-jekyll.md",
     "_drafts/another-cool-post.md",

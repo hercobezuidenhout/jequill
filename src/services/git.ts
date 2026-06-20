@@ -21,14 +21,5 @@ export function createGitService(basePath: string) {
     }
   }
 
-  const commit = async (message: string): Promise<void> => {
-    await execAsync(`git add -A`, { cwd: basePath })
-    await execAsync(`git commit -m "${message}"`, { cwd: basePath })
-  }
-
-  const push = async (): Promise<void> => {
-    await execAsync(`git push`, { cwd: basePath })
-  }
-
-  return { commitAndPush, commit, push }
+  return { commitAndPush }
 }

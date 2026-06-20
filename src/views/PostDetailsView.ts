@@ -1,14 +1,14 @@
 import { ItemView, Notice, TFile, WorkspaceLeaf } from "obsidian"
-import Properties from "../components/Properties.svelte"
 import { mount, unmount } from "svelte"
 import { parseFrontmatter, updateMultipleProperties } from "../services/frontmatter"
 import { createPostService } from "../services/post"
 import { createGitService } from "../services/git"
+import PostDetails from "../components/PostDetails.svelte"
 
-export const VIEW_TYPE_NEW_PROPERTIES = 'jequill-new-properties-view'
+export const VIEW_TYPE_POST_DETAILS = 'jequill-post-details-view'
 
-export class NewPropertiesView extends ItemView {
-    properties: ReturnType<typeof Properties> | undefined
+export class PostDetailsView extends ItemView {
+    properties: ReturnType<typeof PostDetails> | undefined
     currentFile: TFile | null = null;
     private postService: ReturnType<typeof createPostService>
     private gitService: ReturnType<typeof createGitService>
@@ -20,10 +20,10 @@ export class NewPropertiesView extends ItemView {
     }
 
     getViewType(): string {
-        return VIEW_TYPE_NEW_PROPERTIES
+        return VIEW_TYPE_POST_DETAILS
     }
     getDisplayText(): string {
-        return "New properties view"
+        return "Post Details"
     }
     getIcon() {
         return 'settings'
@@ -67,7 +67,7 @@ export class NewPropertiesView extends ItemView {
             unmount(this.properties)
         }
 
-        this.properties = mount(Properties, {
+        this.properties = mount(PostDetails, {
             target: this.contentEl,
             props: {
                 title: frontmatter.title,

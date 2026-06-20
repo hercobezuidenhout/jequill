@@ -1,6 +1,6 @@
 <script lang="js">
     import Post from "./Post.svelte";
-    import SectionHeader from "./SectionHeader.svelte";
+    import PostsSectionHeader from "./PostsSectionHeader.svelte";
 
     let { posts, onPostClick, onNewPostClick } = $props();
     let drafts = posts.filter((post) => post.isDraft);
@@ -14,7 +14,7 @@
 
 {#if drafts.length}
     <div>
-        <SectionHeader heading="Drafts" count={drafts.length} />
+        <PostsSectionHeader heading="Drafts" count={drafts.length} />
         <div class="post-list">
             {#each drafts as post}
                 <Post {post} onClick={() => onPostClick(post.file)} />
@@ -25,7 +25,7 @@
 
 {#if published.length}
     <div>
-        <SectionHeader heading="Published" count={published.length} />
+        <PostsSectionHeader heading="Published" count={published.length} />
         <div class="post-list">
             {#each published as post}
                 <Post {post} onClick={() => onPostClick(post.file)} />

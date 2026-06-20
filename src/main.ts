@@ -2,7 +2,7 @@ import { Plugin, WorkspaceLeaf } from 'obsidian'
 import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace'
 import { JequillSettingTab } from './settings'
 import { PostsView, VIEW_TYPE_POSTS } from './views/PostsView'
-import { NewPropertiesView, VIEW_TYPE_NEW_PROPERTIES } from './views/NewPropertiesView'
+import { PostDetailsView, VIEW_TYPE_POST_DETAILS } from './views/PostDetailsView'
 
 interface JequillPluginSettings {
   enableMinimalWorskpace: boolean
@@ -34,8 +34,8 @@ export default class JequillPlugin extends Plugin {
     )
 
     this.registerView(
-      VIEW_TYPE_NEW_PROPERTIES,
-      (leaf) => new NewPropertiesView(leaf)
+      VIEW_TYPE_POST_DETAILS,
+      (leaf) => new PostDetailsView(leaf)
     )
 
     this.addRibbonIcon('newspaper', 'Jequill', () => {
@@ -117,7 +117,7 @@ export default class JequillPlugin extends Plugin {
     const { workspace } = this.app
 
     let leaf: WorkspaceLeaf | null = null
-    const leaves = workspace.getLeavesOfType(VIEW_TYPE_NEW_PROPERTIES)
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_POST_DETAILS)
 
     if (leaves.length > 0) {
       // A leaf with our view already exists, use that
@@ -126,7 +126,7 @@ export default class JequillPlugin extends Plugin {
       // Our view could not be found in the workspace, create a new leaf
       // in the right sidebar for it
       leaf = workspace.getRightLeaf(false)
-      await leaf?.setViewState({ type: VIEW_TYPE_NEW_PROPERTIES, active: true })
+      await leaf?.setViewState({ type: VIEW_TYPE_POST_DETAILS, active: true })
     }
 
     // "Reveal" the leaf in case it is in a collapsed sidebar

@@ -1,7 +1,7 @@
 import type { App, TFile, Vault } from 'obsidian'
 import type { BlogPost } from '../types'
-import { extractExcerpt } from '../utils/text'
-import { titleToFilename } from '../utils/text'
+import { extractExcerpt } from '../utils'
+import { titleToFilename } from '../utils'
 
 export function createPostService(app: App) {
   const { vault, metadataCache } = app
@@ -133,7 +133,6 @@ Write your post here...
 
   return {
     loadPosts,
-    parsePost,
     createPost,
     publishPost,
     unpublishPost,
