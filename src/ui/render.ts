@@ -101,11 +101,6 @@ export function createRenderer() {
     const icon = getPropertyIcon(key)
     const label = getPropertyLabel(key)
 
-    const labelEl = propRow.createEl('label', {
-      text: `${icon} ${label}`,
-      cls: 'property-label'
-    })
-
     if (key === 'date') {
       const input = propRow.createEl('input', {
         type: 'date',

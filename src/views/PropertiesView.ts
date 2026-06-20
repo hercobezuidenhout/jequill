@@ -2,7 +2,6 @@ import { ItemView, WorkspaceLeaf, TFile, Notice } from 'obsidian'
 import type JekyllBlogManagerPlugin from '../main'
 import { createPostService } from '../services/post'
 import { createGitService } from '../services/git'
-import { createTagService } from '../services/tags'
 import { createRenderer } from '../ui/render'
 import { parseFrontmatter, updateMultipleProperties } from '../services/frontmatter'
 import { injectPropertiesStyles } from '../ui/styles'
@@ -13,12 +12,9 @@ export class PropertiesView extends ItemView {
   plugin: JekyllBlogManagerPlugin
   currentFile: TFile | null = null;
   properties: Record<string, any> = {};
-  allTags: Set<string> = new Set();
-  allCategories: Set<string> = new Set();
 
   private postService: ReturnType<typeof createPostService>
   private gitService: ReturnType<typeof createGitService>
-  private tagService: ReturnType<typeof createTagService>
   private renderer: ReturnType<typeof createRenderer>
 
   constructor(leaf: WorkspaceLeaf, plugin: JekyllBlogManagerPlugin) {
@@ -26,7 +22,6 @@ export class PropertiesView extends ItemView {
     this.plugin = plugin
     this.postService = createPostService(this.app)
     this.gitService = createGitService((this.app.vault.adapter as any).basePath)
-    this.tagService = createTagService(this.app.metadataCache)
     this.renderer = createRenderer()
   }
 
@@ -63,10 +58,14 @@ export class PropertiesView extends ItemView {
   async onClose() {
   }
 
+  invalidFile(file: TFile | null) {
+    return !file || (!file.path.startsWith('_posts/') && !file.path.startsWith('_drafts/'))
+  }
+
   async updateProperties() {
     const activeFile = this.app.workspace.getActiveFile()
 
-    if (!activeFile || (!activeFile.path.startsWith('_posts/') && !activeFile.path.startsWith('_drafts/'))) {
+    if (this.invalidFile(activeFile)) {
       this.currentFile = null
       this.properties = {}
       this.render()
@@ -74,6 +73,7 @@ export class PropertiesView extends ItemView {
     }
 
     this.currentFile = activeFile
+
     await this.loadProperties()
     this.render()
   }
@@ -84,14 +84,6 @@ export class PropertiesView extends ItemView {
     try {
       const content = await this.app.vault.read(this.currentFile)
       this.properties = parseFrontmatter(content)
-
-      const posts = this.app.vault.getMarkdownFiles().filter(file =>
-        file.path.startsWith('_drafts/') || file.path.startsWith('_posts/')
-      )
-
-      const { tags, categories } = await this.tagService.getAllTagsAndCategories(posts)
-      this.allTags = tags
-      this.allCategories = categories
     } catch (error) {
       console.error('Failed to load properties:', error)
     }
@@ -259,18 +251,6 @@ export class PropertiesView extends ItemView {
 
     const orgSection = container.createDiv({ cls: 'property-section' })
     orgSection.createEl('div', { text: 'Organization', cls: 'section-title' })
-
-    if (this.properties['tags'] !== undefined) {
-      const propRow = orgSection.createDiv({ cls: 'property-row' })
-      propRow.createEl('label', { text: '🏷️ Tags', cls: 'property-label' })
-      this.renderer.renderTagsPills(propRow, this.properties['tags'], this.allTags)
-    }
-
-    if (this.properties['categories'] !== undefined) {
-      const propRow = orgSection.createDiv({ cls: 'property-row' })
-      propRow.createEl('label', { text: '📁 Categories', cls: 'property-label' })
-      this.renderer.renderCategoriesDropdown(propRow, this.properties['categories'], this.allCategories)
-    }
 
     const actionsSection = container.createDiv({ cls: 'actions-section' })
 
