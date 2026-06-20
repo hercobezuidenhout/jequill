@@ -1,5 +1,4 @@
 import { ItemView, Notice, TFile, WorkspaceLeaf } from "obsidian"
-import BlogList from '../components/Posts.svelte'
 import { mount, unmount } from "svelte"
 import { createPostService } from "../services/post"
 import type { BlogPost } from "../types"
@@ -8,7 +7,7 @@ import Posts from "../components/Posts.svelte"
 export const VIEW_TYPE_POSTS = "jequill-posts-view"
 
 export class PostsView extends ItemView {
-    blogList: ReturnType<typeof BlogList> | undefined
+    blogList: ReturnType<typeof Posts> | undefined
     posts: BlogPost[] = [];
     private postService: ReturnType<typeof createPostService>
 
