@@ -3,7 +3,6 @@
     import SectionHeader from "./SectionHeader.svelte";
 
     let { posts, onPostClick, onNewPostClick } = $props();
-    console.log(posts);
     let drafts = posts.filter((post) => post.isDraft);
     let published = posts.filter((post) => !post.isDraft);
 </script>
