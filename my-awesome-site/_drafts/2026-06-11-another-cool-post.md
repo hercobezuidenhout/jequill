@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Another cool post!
+title: Another cool post
 date: 2026-06-11
 categories:
 ---
