@@ -1,5 +1,4 @@
 import { Plugin, WorkspaceLeaf } from 'obsidian'
-import { BlogListView } from './views/BlogListView'
 import { PropertiesView } from './views/PropertiesView'
 import { configureMinimalWorkspace, cleanupWorkspace } from './ui/workspace'
 import { VIEW_TYPE_BLOG, VIEW_TYPE_PROPERTIES } from './types'
@@ -37,20 +36,9 @@ export default class JequillPlugin extends Plugin {
 
     this.addSettingTab(new JequillSettingTab(this.app, this))
 
-    this.registerView(VIEW_TYPE_EXAMPLE, (leaf) => new ExampleView(leaf))
-
-    this.addRibbonIcon('dice', 'Activate view', () => {
-      this.activateExampleView()
-    })
-
     this.registerView(
       VIEW_TYPE_NEW_BLOG,
       (leaf) => new NewBlogListView(leaf)
-    )
-
-    this.registerView(
-      VIEW_TYPE_BLOG,
-      (leaf) => new BlogListView(leaf, this)
     )
 
     this.registerView(
@@ -109,20 +97,20 @@ export default class JequillPlugin extends Plugin {
   }
 
   async refreshViews() {
-    const blogLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_BLOG)
-    for (const leaf of blogLeaves) {
-      const view = leaf.view as BlogListView
-      await view.refresh()
-    }
     const propertyLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_PROPERTIES)
     for (const leaf of propertyLeaves) {
       const view = leaf.view as PropertiesView
       await view.updateProperties()
     }
+
+    const postsLeaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_NEW_BLOG)
+    for (const leaf of postsLeaves) {
+      const view = leaf.view as NewBlogListView
+      await view.fetchAndMountBlogList()
+    }
   }
 
   onunload() {
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE_BLOG)
     this.app.workspace.detachLeavesOfType(VIEW_TYPE_PROPERTIES)
     cleanupWorkspace()
   }
@@ -164,28 +152,6 @@ export default class JequillPlugin extends Plugin {
       }
     }
 
-    if (leaf) {
-      workspace.revealLeaf(leaf)
-    }
-  }
-
-  async activateExampleView() {
-    const { workspace } = this.app
-
-    let leaf: WorkspaceLeaf | null = null
-    const leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE)
-
-    if (leaves.length > 0) {
-      // A leaf with our view already exists, use that
-      leaf = leaves[0]
-    } else {
-      // Our view could not be found in the workspace, create a new leaf
-      // in the right sidebar for it
-      leaf = workspace.getLeftLeaf(false)
-      await leaf?.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true })
-    }
-
-    // "Reveal" the leaf in case it is in a collapsed sidebar
     if (leaf) {
       workspace.revealLeaf(leaf)
     }

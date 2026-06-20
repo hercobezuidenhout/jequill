@@ -34,7 +34,12 @@ export class NewBlogListView extends ItemView {
         }
     }
 
-    async mountBlogList(posts: BlogPost[]) {
+    async fetchAndMountBlogList() {
+        this.posts = await this.postService.loadPosts()
+        this.mountBlogList(this.posts)
+    }
+
+    mountBlogList(posts: BlogPost[]) {
         if (this.blogList) {
             unmount(this.blogList)
         }
