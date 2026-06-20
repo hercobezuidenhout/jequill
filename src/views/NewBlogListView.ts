@@ -23,30 +23,30 @@ export class NewBlogListView extends ItemView {
         return 'Jequill'
     }
 
-    async refresh() {
-        await this.loadPosts()
-    }
-
-    async loadPosts() {
-        this.posts = await this.postService.loadPosts()
-    }
-
     protected async onOpen(): Promise<void> {
         this.posts = await this.postService.loadPosts()
-        this.blogList = mount(BlogList, {
-            target: this.contentEl,
-            props: {
-                posts: this.posts,
-                onPostClick: (file) => this.openPostInEditor(file),
-                onNewPostClick: () => this.createNewPost()
-            }
-        })
+        this.mountBlogList(this.posts)
     }
 
     protected async onClose(): Promise<void> {
         if (this.blogList) {
             unmount(this.blogList)
         }
+    }
+
+    async mountBlogList(posts: BlogPost[]) {
+        if (this.blogList) {
+            unmount(this.blogList)
+        }
+
+        this.blogList = mount(BlogList, {
+            target: this.contentEl,
+            props: {
+                posts: posts,
+                onPostClick: (file) => this.openPostInEditor(file),
+                onNewPostClick: () => this.createNewPost()
+            }
+        })
     }
 
     async openPostInEditor(file: TFile) {
@@ -61,13 +61,16 @@ export class NewBlogListView extends ItemView {
 
     async createNewPost() {
         try {
-            const title = "New post"
+            const currentTime = `${new Date().getHours()}${new Date().getMinutes()}${new Date().getMilliseconds()}`
+            const title = `New Post ${currentTime}`
             if (!title) return
 
             const file = await this.postService.createPost(title)
             const leaf = this.app.workspace.getLeaf(false)
             await leaf.openFile(file)
-            await this.refresh()
+
+            this.posts = await this.postService.loadPosts()
+            await this.mountBlogList(this.posts)
             new Notice(`Created draft: ${title}`)
         } catch (error) {
             console.error('Create post error:', error)

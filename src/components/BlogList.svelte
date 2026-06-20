@@ -15,16 +15,20 @@
 
 <div>
     <SectionHeader heading="Drafts" count={drafts.length} />
-    {#each drafts as post}
-        <Post {post} onClick={() => onPostClick(post.file)} />
-    {/each}
+    <div class="post-list">
+        {#each drafts as post}
+            <Post {post} onClick={() => onPostClick(post.file)} />
+        {/each}
+    </div>
 </div>
 
 <div>
     <SectionHeader heading="Published" count={published.length} />
-    {#each published as post}
-        <Post {post} onClick={() => onPostClick(post.file)} />
-    {/each}
+    <div class="post-list">
+        {#each published as post}
+            <Post {post} onClick={() => onPostClick(post.file)} />
+        {/each}
+    </div>
 </div>
 
 <style>
@@ -42,5 +46,11 @@
 
     button {
         cursor: pointer;
+    }
+
+    .post-list {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
 </style>
