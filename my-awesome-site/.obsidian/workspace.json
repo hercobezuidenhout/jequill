@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_drafts/something-nicer.md",
+                "file": "_drafts/yeah booi!.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "something-nicer"
+              "title": "yeah booi!"
             }
           }
         ]
@@ -215,12 +215,12 @@
       "bases:Create new base": false
     }
   },
-  "active": "d55f69c423970cf7",
+  "active": "e9312a2f5003f64b",
   "lastOpenFiles": [
+    "_posts/2026-06-11-welcome-to-jekyll.md",
+    "_drafts/something-nicer.md",
     "_drafts/new-post-1911677.md",
     "_drafts/new-post-1911294.md",
-    "_drafts/something-nicer.md",
-    "_posts/2026-06-11-welcome-to-jekyll.md",
     "_drafts/2026-06-11-another-cool-post.md",
     "_drafts/yeah booi!.md",
     "_drafts/new-post-1911745.md",
