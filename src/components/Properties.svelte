@@ -35,7 +35,7 @@
         <label for="date">Date</label>
         <input name="date" type="date" bind:value={statefulDate} />
     </div>
-    ==
+
     <hr />
     <div class="button-group">
         <div>

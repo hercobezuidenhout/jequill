@@ -75,8 +75,8 @@ export class NewPropertiesView extends ItemView {
                 isDraft: activeFile.path.startsWith('_drafts/'),
                 onDelete: () => this.deletePost(),
                 onSave: (newTitle, newDate) => this.savePost(newTitle, newDate),
-                onPublish: undefined,
-                onUnpublish: undefined
+                onPublish: () => this.publishPost(),
+                onUnpublish: () => this.unpublishPost()
             }
         })
     }
@@ -119,6 +119,44 @@ export class NewPropertiesView extends ItemView {
         } catch (error) {
             console.error('Failed to save post:', error)
             new Notice('Failed to save post')
+        }
+    }
+
+    async publishPost() {
+        if (!this.currentFile) return
+
+        try {
+            const title = this.currentFile.basename
+            const renamedFile = await this.postService.publishPost(this.currentFile)
+            await this.gitService.commitAndPush(`Publish: ${title}`)
+
+            new Notice(`Published: ${title}`)
+
+            this.currentFile = renamedFile
+            const leaf = this.app.workspace.getLeaf(false)
+            await leaf.openFile(renamedFile)
+        } catch (error) {
+            console.error('Failed to publish post:', error)
+            new Notice(`Failed to publish post: ${(error as any).message}`)
+        }
+    }
+
+    async unpublishPost() {
+        if (!this.currentFile) return
+
+        try {
+            const title = this.currentFile.basename
+            const renamedFile = await this.postService.unpublishPost(this.currentFile)
+            await this.gitService.commitAndPush(`Unpublish: ${title}`)
+
+            new Notice(`Unpublished: ${title}`)
+
+            this.currentFile = renamedFile
+            const leaf = this.app.workspace.getLeaf(false)
+            await leaf.openFile(renamedFile)
+        } catch (error) {
+            console.error('Failed to unpublish post:', error)
+            new Notice(`Failed to unpublish post: ${(error as any).message}`)
         }
     }
 }
